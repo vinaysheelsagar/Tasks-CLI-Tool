@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "tasks",
 	Short: "A command-line interface for manage tasks",
 	Long:  "A simple CLI tool for generating tasks using the github.com/vinaysheelsagar/Tasks-CLI-Tool library.",
@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}

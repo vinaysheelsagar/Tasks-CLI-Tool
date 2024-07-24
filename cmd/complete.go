@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -11,8 +10,8 @@ import (
 )
 
 // linkCmd represents the link command
-var linkCmd = &cobra.Command{
-	Use:   "link",
+var completeCmd = &cobra.Command{
+	Use:   "complete",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -21,12 +20,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("link called")
+		fmt.Println("tasks: complete")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(linkCmd)
+	RootCmd.AddCommand(completeCmd)
 
 	// Here you will define your flags and configuration settings.
 

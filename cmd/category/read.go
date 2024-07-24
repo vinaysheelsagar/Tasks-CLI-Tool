@@ -1,7 +1,7 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Vinay Sheel Sagar <vinaysheelsagar@gmail.com>
 */
-package cmd
+package category
 
 import (
 	"fmt"
@@ -10,19 +10,18 @@ import (
 )
 
 // categoryCmd represents the category command
-var categoryCmd = &cobra.Command{
-	Use:   "category",
-	Short: "To link tasks to each other",
-	Long: `You can link tasks to other tasks so that in case parent task completes 
-	then the sub tasks are already market complete or when tasks lead to subtasks`,
+var readCmd = &cobra.Command{
+	Use:   "create",
+	Short: "To create a new category",
+	Long:  `you can use the category command to create a new category`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("category called")
+		fmt.Println("You called category: create command")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(categoryCmd)
+	CategoryCmd.AddCommand(readCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -32,5 +31,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
+	// categoryCmd.Flags().StringP("name", "n", "", "Name of the category")
 	// categoryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
