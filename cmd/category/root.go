@@ -6,8 +6,6 @@ package category
 import (
 	"fmt"
 
-	"github.com/vinaysheelsagar/Tasks-CLI-Tool/cmd"
-
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +29,6 @@ var CategoryCmd = &cobra.Command{
 }
 
 func init() {
-	cmd.RootCmd.AddCommand(CategoryCmd)
 
 	// Here you will define your flags and configuration settings.
 

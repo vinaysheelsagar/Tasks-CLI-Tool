@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/vinaysheelsagar/Tasks-CLI-Tool/cmd"
 	db_controller "github.com/vinaysheelsagar/Tasks-CLI-Tool/db"
 )
 
@@ -33,5 +34,5 @@ func main() {
 
 	// // createTask(db, task)
 
-	// cmd.Execute()
+	cmd.Execute()
 }

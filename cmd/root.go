@@ -4,10 +4,11 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/vinaysheelsagar/Tasks-CLI-Tool/cmd/category"
 )
 
 var RootCmd = &cobra.Command{
-	Use:   "tasks",
+	Use:   "tacl",
 	Short: "A command-line interface for manage tasks",
 	Long:  "A simple CLI tool for generating tasks using the github.com/vinaysheelsagar/Tasks-CLI-Tool library.",
 
@@ -23,4 +24,6 @@ func Execute() {
 	}
 }
 
-func init() {}
+func init() {
+	RootCmd.AddCommand(category.CategoryCmd)
+}
