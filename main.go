@@ -1,38 +1,25 @@
 package main
 
 import (
-	_ "github.com/mattn/go-sqlite3"
+	"io/fs"
+	"os"
+	"path"
+
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/cmd"
-	db_controller "github.com/vinaysheelsagar/Tasks-CLI-Tool/db"
+	database "github.com/vinaysheelsagar/Tasks-CLI-Tool/db"
+	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-type Task struct {
-	ID       int
-	name     string
-	desc     string
-	category string
-	status   string
-	priority int
-}
-
 func main() {
+	homeDir, err := os.UserHomeDir()
+	utilities.CheckNil(err, "Could not find user's home dir", "")
 
-	var DbPath string = "./tasks.db"
+	taclDir := path.Join(homeDir, ".tacl")
+	os.MkdirAll(taclDir, fs.ModePerm)
 
-	db_controller.CheckupDB(DbPath)
+	config := getConfig(taclDir)
 
-	// CheckupDB(DbPath)
-
-	// reader := bufio.NewReader(os.Stdin)
-	// fmt.Print("Enter task title: ")
-	// title, _ := reader.ReadString('\n')
-
-	// var task Task
-
-	// task.task_title = title[:len(title)-1]
-	// task.task_status = "Pending"
-
-	// // createTask(db, task)
+	database.CheckupDB(config.DbPath)
 
 	cmd.Execute()
 }
