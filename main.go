@@ -12,7 +12,11 @@ import (
 
 func main() {
 	homeDir, err := os.UserHomeDir()
-	utilities.CheckNil(err, "Could not find user's home dir", "")
+	utilities.CheckNil(
+		err,
+		"Could not find user's home dir",
+		"",
+	)
 
 	taclDir := path.Join(homeDir, ".tacl")
 	os.MkdirAll(taclDir, fs.ModePerm)
