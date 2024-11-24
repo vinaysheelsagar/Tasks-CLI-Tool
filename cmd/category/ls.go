@@ -12,25 +12,21 @@ import (
 )
 
 // categoryCmd represents the category command
-var CreateCmd = &cobra.Command{
-	Use:   "create",
+var lsCmd = &cobra.Command{
+	Use:   "ls",
 	Short: "To create a new category",
 	Long:  `you can use the category command to create a new category`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		priority, err := cmd.Flags().GetInt("priority")
+
+		categories, err := database.ListCategory()
 		utilities.CheckNil(err, "", "")
 
-		name := args[0]
-
-		id, err := database.CreateCategory(name, priority)
-		utilities.CheckNil(err, "Could not add category to records", "")
-
-		fmt.Println(id)
+		fmt.Println(categories)
 	},
 }
 
 func init() {
-	CreateCmd.Flags().IntP("priority", "p", 0, "category priority value")
+	CategoryCmd.AddCommand(lsCmd)
 
 }
