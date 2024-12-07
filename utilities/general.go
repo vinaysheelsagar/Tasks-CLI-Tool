@@ -9,13 +9,12 @@ import (
 
 func CheckNil(err error, fail_message string, success_message string) {
 	if err != nil {
-		message := fail_message
 		if fail_message != "" {
-			message = err.Error()
+			fmt.Println(fail_message)
+		} else {
+			panic(err)
 		}
-
-		panic(message)
-
+		os.Exit(0)
 	} else {
 		if success_message != "" {
 			fmt.Println(success_message)

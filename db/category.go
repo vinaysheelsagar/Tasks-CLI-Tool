@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
@@ -92,20 +91,16 @@ func UpdateCategory(category Category) (Category, error) {
 	return category, nil
 }
 
-func GetCategoryID(name string) (int64, error) {
+func GetCategoryID(nameOrID string) (int64, error) {
 	db := getDB()
 
-	response := db.QueryRow(`SELECT id FROM categories WHERE name=?`, name)
+	response := db.QueryRow(`SELECT id FROM categories WHERE name=? OR id=?`, nameOrID, nameOrID)
 
 	defer db.Close()
 
 	var id int64
 
 	err := response.Scan(&id)
-
-	if err == sql.ErrNoRows {
-		id, err = strconv.ParseInt(name, 10, 64)
-	}
 
 	if err != nil {
 		return 0, err

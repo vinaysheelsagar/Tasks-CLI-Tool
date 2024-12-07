@@ -13,8 +13,8 @@ import (
 )
 
 // linkCmd represents the link command
-var CompleteCmd = &cobra.Command{
-	Use:   "complete",
+var IncompleteCmd = &cobra.Command{
+	Use:   "incomplete",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -31,7 +31,7 @@ to quickly create a Cobra application.`,
 			os.Exit(0)
 		}
 
-		err = database.CompleteTask(id)
+		err = database.IncompleteTask(id)
 		utilities.CheckNil(err, "", "")
 	},
 }
