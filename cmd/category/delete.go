@@ -12,11 +12,10 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-// categoryCmd represents the category command
 var DeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "To create a new category",
-	Long:  `you can use the category command to create a new category`,
+	Short: "Delete a category.",
+	Long:  `This command deletes an existing category and all its associated tasks.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -34,6 +33,4 @@ var DeleteCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	CategoryCmd.AddCommand(DeleteCmd)
-}
+func init() {}

@@ -112,6 +112,8 @@ func GetCategoryID(nameOrID string) (int64, error) {
 func DeleteCategory(id int64) error {
 	db := getDB()
 
+	// TODO: remove id from tasks
+
 	_, err := db.Exec(`DELETE FROM categories WHERE id=?`, id)
 
 	defer db.Close()

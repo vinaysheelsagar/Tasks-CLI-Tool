@@ -11,8 +11,8 @@ import (
 
 var DeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "To delete a task",
-	Long:  `You can use the task command to create a new task`,
+	Short: "Delete an existing task.",
+	Long:  `This command allows you to delete an existing task.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -20,7 +20,7 @@ var DeleteCmd = &cobra.Command{
 
 		id, err := database.GetTaskID(input)
 		if err != nil {
-			fmt.Println("ERROR: not a valid task name")
+			fmt.Println("ERROR: not a valid task name or ID.")
 			os.Exit(0)
 		}
 

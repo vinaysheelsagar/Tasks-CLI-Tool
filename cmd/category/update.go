@@ -12,11 +12,10 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-// categoryCmd represents the category command
 var UpdateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "To create a new category",
-	Long:  `you can use the category command to create a new category`,
+	Short: "Update a category.",
+	Long:  `This command allows you to update the name of an existing category.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		input := args[0]

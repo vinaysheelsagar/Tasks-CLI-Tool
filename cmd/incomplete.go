@@ -12,16 +12,10 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-// linkCmd represents the link command
 var IncompleteCmd = &cobra.Command{
-	Use:   "incomplete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "uncheck",
+	Short: "Mark a completed task as incomplete.",
+	Long:  `This command allows you to mark a completed task as incomplete.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		input := args[0]
 

@@ -11,11 +11,10 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-// categoryCmd represents the category command
 var CreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "To create a new category",
-	Long:  `you can use the category command to create a new category`,
+	Short: "Create a new category.",
+	Long:  `This command allows you to create a new category to organize your tasks.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		priority, err := cmd.Flags().GetInt("priority")
@@ -32,5 +31,4 @@ var CreateCmd = &cobra.Command{
 
 func init() {
 	CreateCmd.Flags().IntP("priority", "p", 0, "category priority value")
-
 }

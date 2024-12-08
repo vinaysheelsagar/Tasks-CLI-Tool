@@ -10,8 +10,8 @@ import (
 
 var CreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "To create a task",
-	Long:  `You can use the task command to create a new task`,
+	Short: "Create a new task.",
+	Long:  `his command allows you to create a new task. You can provide a description for the task, along with any dependencies or other relevant information.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var categoryID *int64

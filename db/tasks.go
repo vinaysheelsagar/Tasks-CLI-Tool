@@ -177,7 +177,7 @@ func DeleteTask(id int64) error {
 func ListTask() ([]Task, error) {
 	db := getDB()
 
-	rows, err := db.Query(`SELECT id, name, priority, category_id FROM tasks`)
+	rows, err := db.Query(`SELECT id, name, priority, category_id, status FROM tasks`)
 
 	defer db.Close()
 	defer rows.Close()
@@ -188,7 +188,7 @@ func ListTask() ([]Task, error) {
 	for rows.Next() {
 		task := Task{}
 
-		err := rows.Scan(&task.ID, &task.Name, &task.Priority, &task.CategoryID)
+		err := rows.Scan(&task.ID, &task.Name, &task.Priority, &task.CategoryID, &task.Status)
 		utilities.CheckNil(err, "", "")
 
 		tasks = append(tasks, task)
@@ -198,6 +198,7 @@ func ListTask() ([]Task, error) {
 	}
 	return tasks, nil
 }
+
 func ShowUncheckedTasks() ([]Task, error) {
 	db := getDB()
 

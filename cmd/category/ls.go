@@ -11,11 +11,10 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-// categoryCmd represents the category command
 var lsCmd = &cobra.Command{
 	Use:   "ls",
-	Short: "To create a new category",
-	Long:  `you can use the category command to create a new category`,
+	Short: "List all categories.",
+	Long:  `This command displays a list of all existing categories.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 
