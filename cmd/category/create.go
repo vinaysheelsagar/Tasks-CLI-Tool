@@ -22,7 +22,9 @@ var CreateCmd = &cobra.Command{
 
 		name := args[0]
 
-		id, err := database.CreateCategory(name, priority)
+		db := database.GetDB()
+		id, err := database.CreateCategory(db, name, priority)
+		defer db.Close()
 		utilities.CheckNil(err, "Could not add category to records", "")
 
 		fmt.Println(id)
@@ -30,5 +32,5 @@ var CreateCmd = &cobra.Command{
 }
 
 func init() {
-	CreateCmd.Flags().IntP("priority", "p", 0, "category priority value")
+	CreateCmd.Flags().IntP("priority", "p", 5, "category priority value")
 }

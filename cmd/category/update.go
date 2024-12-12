@@ -19,13 +19,17 @@ var UpdateCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		input := args[0]
-		id, err := database.GetCategoryID(input)
+
+		db := database.GetDB()
+		id, err := database.GetCategoryID(db, input)
 		if err != nil {
+			defer db.Close()
 			fmt.Println("ERROR: not a valid category name")
 			os.Exit(0)
 		}
 
-		category, err := database.ReadCategory(id)
+		category, err := database.ReadCategory(db, id)
+		defer db.Close()
 		utilities.CheckNil(err, "", "")
 
 		updatePriority, err := cmd.Flags().GetInt("priority")
@@ -41,7 +45,9 @@ var UpdateCmd = &cobra.Command{
 			category.Name = updateName
 		}
 
-		category, err = database.UpdateCategory(category)
+		db = database.GetDB()
+		category, err = database.UpdateCategory(db, category)
+		defer db.Close()
 		utilities.CheckNil(err, "", "")
 
 		fmt.Println(category)

@@ -32,8 +32,7 @@ func TaskTableCheckup(db *sql.DB) {
 
 }
 
-func CreateTask(name string, priority int, categoryID *int64) (int64, error) {
-	db := getDB()
+func CreateTask(db *sql.DB, name string, priority int, categoryID *int64) (int64, error) {
 
 	result, err := db.Exec(
 		`INSERT INTO tasks (name, priority, category_id) VALUES (?, ?, ?)`,
@@ -53,15 +52,12 @@ func CreateTask(name string, priority int, categoryID *int64) (int64, error) {
 	return id, nil
 }
 
-func ReadTask(id int64) (Task, error) {
-	db := getDB()
+func ReadTask(db *sql.DB, id int64) (Task, error) {
 
 	row := db.QueryRow(`
 	SELECT id, name, priority, category_id, status 
 	FROM tasks 
 	WHERE id=?`, id)
-
-	defer db.Close()
 
 	task := Task{}
 
@@ -79,9 +75,7 @@ func ReadTask(id int64) (Task, error) {
 	return task, nil
 }
 
-func CompleteTask(id int64) error {
-
-	db := getDB()
+func CompleteTask(db *sql.DB, id int64) error {
 
 	_, err := db.Exec(
 		`
@@ -93,14 +87,10 @@ func CompleteTask(id int64) error {
 		id,
 	)
 
-	defer db.Close()
-
 	return err
 }
 
-func IncompleteTask(id int64) error {
-
-	db := getDB()
+func IncompleteTask(db *sql.DB, id int64) error {
 
 	_, err := db.Exec(
 		`
@@ -112,15 +102,10 @@ func IncompleteTask(id int64) error {
 		id,
 	)
 
-	defer db.Close()
-
 	return err
-
 }
 
-func UpdateTask(task Task) (Task, error) {
-
-	db := getDB()
+func UpdateTask(db *sql.DB, task Task) (Task, error) {
 
 	_, err := db.Exec(
 		`
@@ -133,12 +118,11 @@ func UpdateTask(task Task) (Task, error) {
 		task.Name, task.Priority, task.CategoryID, task.ID,
 	)
 
-	defer db.Close()
 	if err != nil {
 		return task, err
 	}
 
-	task, err = ReadTask(task.ID)
+	task, err = ReadTask(db, task.ID)
 	if err != nil {
 		return task, err
 	}
@@ -146,12 +130,9 @@ func UpdateTask(task Task) (Task, error) {
 	return task, nil
 }
 
-func GetTaskID(name string) (int64, error) {
-	db := getDB()
+func GetTaskID(db *sql.DB, name string) (int64, error) {
 
 	response := db.QueryRow(`SELECT id FROM tasks WHERE name=? OR id=?`, name, name)
-
-	defer db.Close()
 
 	var id int64
 
@@ -164,22 +145,15 @@ func GetTaskID(name string) (int64, error) {
 	return id, nil
 }
 
-func DeleteTask(id int64) error {
-	db := getDB()
-
+func DeleteTask(db *sql.DB, id int64) error {
 	_, err := db.Exec(`DELETE FROM tasks WHERE id=?`, id)
-
-	defer db.Close()
-
 	return err
 }
 
-func ListTask() ([]Task, error) {
-	db := getDB()
+func ListTask(db *sql.DB) ([]Task, error) {
 
 	rows, err := db.Query(`SELECT id, name, priority, category_id, status FROM tasks`)
 
-	defer db.Close()
 	defer rows.Close()
 	utilities.CheckNil(err, "", "")
 
@@ -199,40 +173,40 @@ func ListTask() ([]Task, error) {
 	return tasks, nil
 }
 
-func ShowUncheckedTasks() ([]Task, error) {
-	db := getDB()
+func ShowUncheckedTasks(db *sql.DB) ([]Task, error) {
 
 	rows, err := db.Query(`
-	SELECT 
-		id,
-		name,
-		normalized_task_priority + normalized_category_priority AS total_priority
-	FROM (
 		SELECT 
-			tasks.id, 
-			tasks.name, 
-			CAST(tasks.priority AS FLOAT) / AVG(tasks.priority) OVER () AS normalized_task_priority, 
-			CASE WHEN categories.priority IS NULL THEN 0
-			ELSE CAST(categories.priority AS FLOAT) / AVG(categories.priority) OVER () END AS normalized_category_priority 
-		FROM tasks
-		FULL OUTER JOIN categories
-		ON tasks.category_id = categories.id
-		WHERE tasks.status=FALSE
-	)
-	ORDER BY total_priority DESC
+			id,
+			name,
+			category_id,
+			normalized_task_priority + normalized_category_priority AS total_priority
+		FROM (
+			SELECT 
+				tasks.id, 
+				tasks.name, 
+				tasks.category_id,
+				CAST(tasks.priority AS FLOAT) / AVG(tasks.priority) OVER () AS normalized_task_priority, 
+				CASE WHEN categories.priority IS NULL THEN 0
+				ELSE CAST(categories.priority AS FLOAT) / AVG(categories.priority) OVER () END AS normalized_category_priority 
+			FROM tasks
+			FULL OUTER JOIN categories
+			ON tasks.category_id = categories.id
+			WHERE tasks.status=FALSE
+		)
+		ORDER BY total_priority DESC
 	`)
 
-	defer db.Close()
 	defer rows.Close()
 	utilities.CheckNil(err, "", "")
 
 	var tasks []Task
-	var weightage float64
+	var weightage *float64
 
 	for rows.Next() {
 		task := Task{}
 
-		err := rows.Scan(&task.ID, &task.Name, &weightage)
+		err := rows.Scan(&task.ID, &task.Name, &task.CategoryID, &weightage)
 		utilities.CheckNil(err, "", "")
 
 		tasks = append(tasks, task)

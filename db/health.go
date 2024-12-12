@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"log"
 	"os"
@@ -45,12 +44,13 @@ func CheckupDB(path string) {
 		createDbFile(path)
 	}
 
-	db, err := sql.Open("sqlite3", path)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// db, err := sql.Open("sqlite3", path)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	db := GetDB()
 
-	CategoryTableCheckup()
+	CategoryTableCheckup(db)
 	TaskTableCheckup(db)
 
 	defer db.Close()

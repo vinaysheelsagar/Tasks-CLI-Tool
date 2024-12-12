@@ -19,13 +19,16 @@ var CompleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		input := args[0]
 
-		id, err := database.GetTaskID(input)
+		db := database.GetDB()
+		id, err := database.GetTaskID(db, input)
 		if err != nil {
+			defer db.Close()
 			fmt.Println("ERROR: not a valid task name.")
 			os.Exit(0)
 		}
 
-		err = database.CompleteTask(id)
+		err = database.CompleteTask(db, id)
+		defer db.Close()
 		utilities.CheckNil(err, "", "")
 	},
 }

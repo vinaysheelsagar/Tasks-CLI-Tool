@@ -23,7 +23,10 @@ var CreateCmd = &cobra.Command{
 		utilities.CheckNil(err, "", "")
 
 		if category != "" {
-			_categoryID, err := database.GetCategoryID(category)
+			db := database.GetDB()
+			_categoryID, err := database.GetCategoryID(db, category)
+			defer db.Close()
+
 			utilities.CheckNil(err, "", "")
 
 			categoryID = &_categoryID
@@ -31,7 +34,9 @@ var CreateCmd = &cobra.Command{
 
 		name := args[0]
 
-		id, err := database.CreateTask(name, priority, categoryID)
+		db := database.GetDB()
+		id, err := database.CreateTask(db, name, priority, categoryID)
+		defer db.Close()
 		utilities.CheckNil(err, "Could not add task to records", "")
 
 		fmt.Println(id)
@@ -40,6 +45,6 @@ var CreateCmd = &cobra.Command{
 }
 
 func init() {
-	CreateCmd.Flags().IntP("priority", "p", 10, "sets priority for task")
+	CreateCmd.Flags().IntP("priority", "p", 5, "sets priority for task")
 	CreateCmd.Flags().StringP("category", "c", "", "sets category for task")
 }

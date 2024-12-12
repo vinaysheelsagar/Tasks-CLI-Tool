@@ -7,7 +7,7 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-func getDB() *sql.DB {
+func GetDB() *sql.DB {
 	config := configuration.GetConfig()
 
 	db, err := sql.Open("sqlite3", config.DbPath)

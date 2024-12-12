@@ -18,7 +18,9 @@ var lsCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		categories, err := database.ListCategory()
+		db := database.GetDB()
+		categories, err := database.ListCategory(db)
+		defer db.Close()
 		utilities.CheckNil(err, "", "")
 
 		fmt.Println(categories)

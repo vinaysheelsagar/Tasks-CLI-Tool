@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 Vinay Sheel Sagar <vinaysheelsagar@gmail.com>
-*/
 package cmd
 
 import (
@@ -13,20 +10,22 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-var LsCmd = &cobra.Command{
-	Use:   "ls",
-	Short: "List all tasks.",
-	Long:  `This command displays a list of all tasks, including their status (completed or incomplete).`,
+// TODO: filter by categories flag
+var ShowCmd = &cobra.Command{
+	Use:   "todo",
+	Short: "List incomplete tasks by priority.",
+	Long:  `This command displays a list of all incomplete tasks, sorted by their priority level. Higher priority tasks will appear at the top of the list.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-
 		db := database.GetDB()
-		tasks, err := database.ListTask(db)
-		db.Close()
+		tasks, err := database.ShowUncheckedTasks(db)
+		defer db.Close()
+
 		utilities.CheckNil(err, "", "")
 
 		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', tabwriter.TabIndent)
-		fmt.Fprintf(w, "ID\tName\tPriority\tCategory\tStatus\n")
+		fmt.Fprintf(w, "ID\tTask\tCategory\n")
+
 		for _, task := range tasks {
 			categoryName := ""
 			if task.CategoryID != nil {
@@ -38,12 +37,10 @@ var LsCmd = &cobra.Command{
 			}
 			fmt.Fprintf(
 				w,
-				"%d\t%s\t%d\t%v\t%v\n",
+				"%d\t%s\t%v\n",
 				task.ID,
 				task.Name,
-				task.Priority,
 				categoryName,
-				task.Status,
 			)
 		}
 

@@ -12,13 +12,12 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-var DeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete a category.",
-	Long:  `This command deletes an existing category and all its associated tasks.`,
+var ViewCmd = &cobra.Command{
+	Use:   "view",
+	Short: "View category details.",
+	Long:  `This command displays detailed information about a specific category, including its name and associated tasks.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-
 		input := args[0]
 
 		db := database.GetDB()
@@ -29,9 +28,11 @@ var DeleteCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		err = database.DeleteCategory(db, id)
+		category, err := database.ReadCategory(db, id)
 		defer db.Close()
 		utilities.CheckNil(err, "", "")
+
+		fmt.Println(category)
 	},
 }
 

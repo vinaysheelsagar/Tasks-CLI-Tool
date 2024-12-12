@@ -18,13 +18,16 @@ var DeleteCmd = &cobra.Command{
 
 		input := args[0]
 
-		id, err := database.GetTaskID(input)
+		db := database.GetDB()
+		id, err := database.GetTaskID(db, input)
 		if err != nil {
+			db.Close()
 			fmt.Println("ERROR: not a valid task name or ID.")
 			os.Exit(0)
 		}
 
-		err = database.DeleteTask(id)
+		err = database.DeleteTask(db, id)
+		db.Close()
 		utilities.CheckNil(err, "", "")
 	},
 }

@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -12,10 +9,11 @@ import (
 	"github.com/vinaysheelsagar/Tasks-CLI-Tool/utilities"
 )
 
-var IncompleteCmd = &cobra.Command{
-	Use:   "uncheck",
-	Short: "Mark a completed task as incomplete.",
-	Long:  `This command allows you to mark a completed task as incomplete.`,
+var ReadCmd = &cobra.Command{
+	Use:   "view",
+	Short: "View detailed information about a specific task.",
+	Long:  `This command allows you to display detailed information about a particular task. It provides a comprehensive overview of the task, including its description, dependencies, and other relevant details.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		input := args[0]
 
@@ -27,10 +25,12 @@ var IncompleteCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		err = database.IncompleteTask(db, id)
+		task, err := database.ReadTask(db, id)
 		defer db.Close()
 
 		utilities.CheckNil(err, "", "")
+
+		println(task.ID, task.Name, task.Priority, task.CategoryID)
 	},
 }
 

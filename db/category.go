@@ -15,8 +15,7 @@ type Category struct {
 	Priority int
 }
 
-func CategoryTableCheckup() {
-	db := getDB()
+func CategoryTableCheckup(db *sql.DB) {
 
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS "categories" (
 		"id"	INTEGER,
@@ -25,14 +24,13 @@ func CategoryTableCheckup() {
 
 		PRIMARY KEY("id" AUTOINCREMENT)
 	)`)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
-func CreateCategory(name string, priority int) (int64, error) {
-	db := getDB()
+func CreateCategory(db *sql.DB, name string, priority int) (int64, error) {
 
 	result, err := db.Exec(
 		`INSERT INTO categories (name, priority) VALUES (?, ?)`,
@@ -51,14 +49,11 @@ func CreateCategory(name string, priority int) (int64, error) {
 	return id, nil
 }
 
-func ReadCategory(id int64) (Category, error) {
-	db := getDB()
+func ReadCategory(db *sql.DB, id int64) (Category, error) {
+	category := Category{}
 
 	row := db.QueryRow(`SELECT * FROM categories WHERE id=?`, id)
 
-	defer db.Close()
-
-	category := Category{}
 	err := row.Scan(&category.ID, &category.Name, &category.Priority)
 	if err != nil {
 		return category, err
@@ -67,9 +62,7 @@ func ReadCategory(id int64) (Category, error) {
 	return category, nil
 }
 
-func UpdateCategory(category Category) (Category, error) {
-
-	db := getDB()
+func UpdateCategory(db *sql.DB, category Category) (Category, error) {
 
 	_, err := db.Exec(
 		`UPDATE categories SET name = ?, priority = ? WHERE id=?`,
@@ -78,12 +71,11 @@ func UpdateCategory(category Category) (Category, error) {
 		category.ID,
 	)
 
-	defer db.Close()
 	if err != nil {
 		return category, err
 	}
 
-	category, err = ReadCategory(category.ID)
+	category, err = ReadCategory(db, category.ID)
 	if err != nil {
 		return category, err
 	}
@@ -91,14 +83,10 @@ func UpdateCategory(category Category) (Category, error) {
 	return category, nil
 }
 
-func GetCategoryID(nameOrID string) (int64, error) {
-	db := getDB()
+func GetCategoryID(db *sql.DB, nameOrID string) (int64, error) {
+	var id int64
 
 	response := db.QueryRow(`SELECT id FROM categories WHERE name=? OR id=?`, nameOrID, nameOrID)
-
-	defer db.Close()
-
-	var id int64
 
 	err := response.Scan(&id)
 
@@ -109,28 +97,22 @@ func GetCategoryID(nameOrID string) (int64, error) {
 	return id, nil
 }
 
-func DeleteCategory(id int64) error {
-	db := getDB()
+func DeleteCategory(db *sql.DB, id int64) error {
 
 	// TODO: remove id from tasks
 
 	_, err := db.Exec(`DELETE FROM categories WHERE id=?`, id)
 
-	defer db.Close()
-
 	return err
 }
 
-func ListCategory() ([]Category, error) {
-	db := getDB()
+func ListCategory(db *sql.DB) ([]Category, error) {
+	var categories []Category
 
 	rows, err := db.Query(`SELECT * FROM categories`)
-
-	defer db.Close()
 	defer rows.Close()
-	utilities.CheckNil(err, "", "")
 
-	var categories []Category
+	utilities.CheckNil(err, "", "")
 
 	for rows.Next() {
 		category := Category{}
@@ -145,8 +127,10 @@ func ListCategory() ([]Category, error) {
 		}
 		categories = append(categories, category)
 	}
+
 	if err = rows.Err(); err != nil {
 		return categories, err
 	}
+
 	return categories, nil
 }
